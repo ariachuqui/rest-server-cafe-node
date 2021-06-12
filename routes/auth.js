@@ -1,10 +1,9 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { emailExist } = require('../helpers/db-validators');
 const { validateField } = require('../middleware/validate-fields');
 
-const { login } = require('../controllers/auth');
+const { login, googleSingin } = require('../controllers/auth');
 
 const router = Router();
 
@@ -13,6 +12,11 @@ router.post('/login',[
     check('password', 'this password is required').not().isEmpty(),
     validateField
 ] ,login);
+
+router.post('/google',[
+    check('id_token', 'id token is required').not().isEmpty(),
+    validateField
+] ,googleSingin);
 
 
 module.exports = router;

@@ -53,6 +53,13 @@ const login = async( req, res = response ) => {
 
 }
 
+const googleSingin = (req, res=response) => {
+    res.json({
+        msg: 'Google sing in - ok'
+    })
+}
+
 module.exports = {
-    login
+    login,
+    googleSingin
 }
