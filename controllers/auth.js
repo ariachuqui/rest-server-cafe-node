@@ -4,6 +4,7 @@ const bcryptjs = require('bcryptjs');
 const User = require('../models/user');
 
 const { generateJWT } = require('../helpers/generate-jwt');
+const { googleVerify } = require('../helpers/google-verify');
 
 const login = async( req, res = response ) => {
 
@@ -53,13 +54,60 @@ const login = async( req, res = response ) => {
 
 }
 
-const googleSingin = (req, res=response) => {
-    res.json({
-        msg: 'Google sing in - ok'
-    })
+const googleSignin = async(req, res=response) => {
+
+    const {id_token} = req.body;
+
+    try {
+
+        const { email, name, img } = await googleVerify( id_token  );
+        
+        //Verificamos si el email del usuario ya está registrado
+        let user = await User.findOne( {email} );
+
+        //Puede pasar que el usuario existe, como que no existe y es la primera vez que se registra
+        
+        //Si no existe, tengo que crearlo
+        if( !user ) {
+            const data = {
+                name,
+                email,
+                password: '',
+                img,
+                google: true
+            }
+
+            user = new User( data );
+            await user.save();
+        }
+
+        //Si el usuario  en DB tiene state en false
+        if( !user.state ) {
+            return res.status(401).json({
+                msg: "talk to the administrator, user blocked"
+            })
+        }
+
+        //Generar JWT
+        const token = await generateJWT(user.id);
+
+        res.json({
+            msg: 'Google sing in - ok',
+            user,
+            token
+        })
+    
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({
+            msg: 'Google token is not valid',
+            id_token
+        })
+
+    }
 }
 
 module.exports = {
     login,
-    googleSingin
+    googleSignin
 }
