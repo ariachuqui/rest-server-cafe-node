@@ -5,5 +5,5 @@ const validateRoles = require('../middleware/validate-roles');
 module.exports = {
     ...validateField,
     ...validateJWT,
-    ...validateRoles
+    ...validateRoles,
 }
