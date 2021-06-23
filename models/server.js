@@ -9,10 +9,11 @@ class Server {
         this.app = express();
         this.port = process.env.PORT;
         this.paths = {
-            users: '/api/users',
+            auth:       '/api/auth',
             categories: '/api/categories',
-            auth: '/api/auth',
-            products: '/api/products',
+            products:   '/api/products',
+            search:     '/api/search',
+            users:      '/api/users',
         };
 
         //Conectar a base de datos
@@ -48,6 +49,7 @@ class Server {
         this.app.use( this.paths.auth, require('../routes/auth'));
         this.app.use( this.paths.categories, require('../routes/categories'));
         this.app.use( this.paths.products, require('../routes/products'));
+        this.app.use( this.paths.search, require('../routes/search'));
     };
 
     listen() {

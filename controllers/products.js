@@ -37,11 +37,11 @@ const getProduct = async(req, res = response) => {
 //createProduct 
 const createProduct = async(req, res = response) => {
 
-    const [state, user, ...newProduct] = req.body;
-    const name = req.body.name.toUpperCase();
+    const {state, user, ...newProduct} = req.body;
+    const name = newProduct.name.toUpperCase();
     newProduct.name = name;
 
-    //Validate if the product already exists
+    // Validate if the product already exists
     const productExist = await Product.findOne({ name })
 
     if ( productExist ) {
