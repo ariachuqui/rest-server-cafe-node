@@ -18,8 +18,6 @@ const dbConnection = async() => {
         console.log(error)
         throw new Error('Error a la hora de inicializar la Base de Datos');
     }
-
-
 }
 
 module.exports = {
